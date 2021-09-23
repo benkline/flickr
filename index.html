@@ -2,11 +2,21 @@
   <head>
     <title>Flickr Search</title>
     <style>
+      @keyframes rotation {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(359deg);
+        }
+      }
       body {
         background-color: #eee;
       }
       .search-container {
-        margin:10px;
+        display: flex;
+        gap:12px;
+        margin-bottom:12px;
       }
       .input{
         font-size: medium;
@@ -17,8 +27,10 @@
         padding:20px
       }
       .spinner {
-        max-width: 250px;
+        animation: rotation 2.5s infinite linear;
+        max-width: 60px;
         display: none;
+        
       }
       .thumbs {
         display: flex;
@@ -45,13 +57,11 @@
     <div class=search-container>
       <input class=input id=search type='text'>
       <button onclick="getFlickr()" class='go'>Go</button>
+      <img id=spinid class=spinner src="/pngwing.com.png">
     </div>
 
-    <img id=spinid class=spinner src="/pngwing.com.png">
     
-    <div id=display class='thumbs'>
-
-    </div>
+    <div id=display class='thumbs'></div>
       
     <script>
       async function getFlickr() {
@@ -61,6 +71,7 @@
         let tags = `&tags='${document.getElementById("search").value}'`
         tags = tags.replace(/ /g, ',');
         let photos = ''
+        document.getElementById("display").innerHTML = photos
         document.getElementById("spinid").style.display = "block"
 
         await fetch(flickrAPI+tags)
