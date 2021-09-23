@@ -16,6 +16,10 @@
         font-size: medium;
         padding:20px
       }
+      .spinner {
+        max-width: 250px;
+        display: none;
+      }
       .thumbs {
         display: flex;
         flex-wrap: wrap;
@@ -43,7 +47,8 @@
       <button onclick="getFlickr()" class='go'>Go</button>
     </div>
 
-
+    <img id=spinid class=spinner src="/pngwing.com.png">
+    
     <div id=display class='thumbs'>
 
     </div>
@@ -56,9 +61,13 @@
         let tags = `&tags='${document.getElementById("search").value}'`
         tags = tags.replace(/ /g, ',');
         let photos = ''
+        document.getElementById("spinid").style.display = "block"
 
         await fetch(flickrAPI+tags)
-        .then(response => response.json())
+        .then(response => {
+          document.getElementById("spinid").style.display = "none"
+          return response.json()
+        })
         .then(data => {
           for (let each of data.photos.photo){
             photos += `<div class=photo><div class=views>${each.views}</div><img src="https://live.staticflickr.com/${each.server}/${each.id}_${each.secret}_q.jpg></div>`
