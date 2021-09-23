@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>Flickr Search</title>
+    <style>
+      body {
+        background-color: #eee;
+      }
+      .search-container {
+        margin:10px;
+      }
+      .input{
+        font-size: medium;
+        padding:20px
+      }
+      .go {
+        font-size: medium;
+        padding:20px
+      }
+      .thumbs {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat( auto-fit, minmax(150px, 1fr) );
+      }
+      .photo {
+        position:relative;
+      }
+      .views {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: x-large;
+        font-weight: bolder;
+        color: white;
+        transform: translate(-50%,-50%);
+        -ms-transform: translate(-50%,-50%);
+      }
+    </style>
+  <body>
+    <h1>Flickr Search</h1>
+
+    <div class=search-container>
+      <input class=input id=search type='text'>
+      <button onclick="getFlickr()" class='go'>Go</button>
+    </div>
+
+
+    <div id=display class='thumbs'>
+
+    </div>
+      
+    <script>
+      async function getFlickr() {
+        const key = '4e258a4396bf5ba0448b2e2fe574034e'
+        const flickrAPI = 'https://api.flickr.com/services/rest/?method=flickr.photos.search&format=json&nojsoncallback=1&extras=views&api_key='+`${key}`
+        let tags = `&tags='${document.getElementById("search").value}'`
+        let photos = ''
+
+        await fetch(flickrAPI+tags)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          for (let each of data.photos.photo){
+            photos += `<div class=photo><div class=views>${each.views}</div><img src="https://live.staticflickr.com/${each.server}/${each.id}_${each.secret}_q.jpg></div>`
+          }
+          document.getElementById("display").innerHTML = photos
+        })
+      }
+    </script>
+  </body>
+</html>
